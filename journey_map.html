@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My journey map</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<style>
+  html, body, #map { height: 100%; margin: 0; }
+  .leaflet-popup-content { font: 14px/1.4 system-ui, sans-serif; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+  // name, latitude, longitude, what happened there
+  var stops = [
+    ["Bodrum", 37.0344, 27.4305, "Born and raised"],
+    ["Izmir", 38.4237, 27.1428, "High school"],
+    ["Istanbul", 41.0082, 28.9784, "University, then 4.5 years at PwC"],
+    ["Berlin", 52.5200, 13.4050, "5+ years at BASF, now studying at HWR"]
+  ];
+
+  var map = L.map("map", { scrollWheelZoom: false });
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 18,
+    attribution: "&copy; OpenStreetMap contributors"
+  }).addTo(map);
+
+  var path = [];
+  stops.forEach(function (s, i) {
+    var last = i === stops.length - 1;
+    L.circleMarker([s[1], s[2]], {
+      radius: last ? 11 : 8,
+      color: "#ffffff", weight: 2,
+      fillColor: last ? "#B5405F" : "#1D5C6E", fillOpacity: 1
+    }).addTo(map)
+      .bindTooltip(s[0])
+      .bindPopup("<b>" + s[0] + "</b><br>" + s[3]);
+    path.push([s[1], s[2]]);
+  });
+
+  L.polyline(path, { color: "#1D5C6E", weight: 3, dashArray: "6 8" }).addTo(map);
+  map.fitBounds(path, { padding: [40, 40] });
+</script>
+</body>
+</html>
